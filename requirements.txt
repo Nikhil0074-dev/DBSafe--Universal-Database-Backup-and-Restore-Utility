@@ -1,0 +1,13 @@
+Flask
+Werkzeug
+cryptography
+APScheduler
+python-dotenv
+
+# Database drivers (only the ones for databases you actually use are needed)
+mysql-connector-python
+psycopg[binary]
+pymongo
+
+# Testing
+pytest
