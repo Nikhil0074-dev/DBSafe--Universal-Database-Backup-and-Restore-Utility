@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Backup details{% endblock %}
+{% block content %}
+<div id="details" data-backup-id="{{ backup_id }}">
+  <a href="{{ url_for('pages.backups') }}" class="small">&larr; Back to backups</a>
+  <h1 class="h3 my-3" id="d-title">Backup</h1>
+  <div id="d-error" class="alert alert-danger d-none"></div>
+  <div class="card mb-3"><div class="card-body"><dl class="row mb-0" id="d-fields"></dl></div></div>
+  <div id="d-verify" class="alert d-none"></div>
+  <div class="d-flex flex-wrap gap-2">
+    <button class="btn btn-outline-primary" id="d-verify-btn" type="button">Verify checksum</button>
+    <button class="btn btn-outline-primary" id="d-deep-btn" type="button">Deep verify</button>
+    <a class="btn btn-primary" id="d-restore" href="#">Restore…</a>
+    {% if user.role == 'admin' %}<button class="btn btn-outline-danger" id="d-delete" type="button">Delete</button>{% endif %}
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/backup.js') }}"></script>{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Backups{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Backups</h1>
+<div class="card mb-4">
+  <div class="card-header fw-semibold">Create backup</div>
+  <div class="card-body">
+    <div class="row g-3">
+      <div class="col-md-4"><label class="form-label" for="b-connection">Database</label>
+        <select class="form-select" id="b-connection"></select></div>
+      <div class="col-md-2"><label class="form-label" for="b-type">Backup type</label>
+        <select class="form-select" id="b-type"><option value="full">Full</option><option value="selective">Selective</option></select></div>
+      <div class="col-md-2"><label class="form-label" for="b-compression">Compression</label>
+        <select class="form-select" id="b-compression"><option value="gzip">GZIP</option><option value="zip">ZIP</option><option value="none">None</option></select></div>
+      <div class="col-md-4 d-flex align-items-end gap-4 pb-2">
+        <div class="form-check"><input class="form-check-input" type="checkbox" id="b-encrypt"><label class="form-check-label" for="b-encrypt">Encrypt (AES-256)</label></div>
+        <div class="form-check"><input class="form-check-input" type="checkbox" id="b-verify" checked><label class="form-check-label" for="b-verify">Verify</label></div>
+      </div>
+      {% if user.role == 'admin' %}
+      <div class="col-md-6"><label class="form-label" for="b-destination">Destination folder (optional)</label>
+        <input class="form-control" id="b-destination" placeholder="Default: backups/&lt;type&gt;"></div>
+      {% endif %}
+      <div class="col-12 d-none" id="tables-box"><label class="form-label">Tables</label>
+        <div id="tables-list" class="tables-grid"></div></div>
+    </div>
+    <button class="btn btn-primary mt-3" id="create-btn" type="button">Create backup</button>
+    <span class="ms-3 text-muted small" id="create-status"></span>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header d-flex flex-wrap gap-2 justify-content-between align-items-center">
+    <span class="fw-semibold">Backup history</span>
+    <div class="d-flex flex-wrap gap-2">
+      <input class="form-control form-control-sm" style="width: 200px" id="h-search" placeholder="Search…">
+      <select class="form-select form-select-sm" style="width: 130px" id="h-status">
+        <option value="">All statuses</option><option value="success">Success</option><option value="failed">Failed</option><option value="running">Running</option></select>
+      <select class="form-select form-select-sm" style="width: 150px" id="h-sort">
+        <option value="created_at:desc">Newest first</option><option value="created_at:asc">Oldest first</option>
+        <option value="size:desc">Largest first</option><option value="size:asc">Smallest first</option></select>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover mb-0 align-middle">
+      <thead><tr><th>Backup ID</th><th>Database</th><th>Date</th><th>Size</th><th>Options</th><th>Integrity</th><th>Status</th><th class="text-end">Actions</th></tr></thead>
+      <tbody id="history"><tr><td colspan="8" class="text-muted">Loading…</td></tr></tbody>
+    </table>
+  </div>
+  <div class="card-footer d-flex justify-content-between align-items-center">
+    <span class="small text-muted" id="h-count"></span>
+    <div class="btn-group btn-group-sm"><button class="btn btn-outline-secondary" id="h-prev" type="button">Previous</button>
+      <button class="btn btn-outline-secondary" id="h-next" type="button">Next</button></div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/backup.js') }}"></script>{% endblock %}

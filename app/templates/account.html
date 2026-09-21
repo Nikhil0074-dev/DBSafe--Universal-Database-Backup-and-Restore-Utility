@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Account{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">My account</h1>
+<div class="card" style="max-width: 480px;"><div class="card-body">
+  <p class="text-muted">Signed in as <strong>{{ user.username }}</strong> ({{ user.role }}).</p>
+  <div class="mb-3"><label class="form-label" for="a-cur">Current password</label><input class="form-control" id="a-cur" type="password" autocomplete="current-password"></div>
+  <div class="mb-3"><label class="form-label" for="a-new">New password</label><input class="form-control" id="a-new" type="password" autocomplete="new-password"></div>
+  <button class="btn btn-primary" id="a-btn" type="button">Change password</button>
+</div></div>
+{% endblock %}
+{% block scripts %}
+<script>
+document.getElementById('a-btn').addEventListener('click', async () => {
+  try {
+    await DBSafe.api('/api/auth/change-password', {method: 'POST', body: {
+      current_password: document.getElementById('a-cur').value, new_password: document.getElementById('a-new').value}});
+    document.getElementById('a-cur').value = ''; document.getElementById('a-new').value = '';
+    DBSafe.toast('Password changed', 'success');
+  } catch (e) { DBSafe.toast(e.message, 'danger'); }
+});
+</script>
+{% endblock %}

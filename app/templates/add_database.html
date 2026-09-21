@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if connection_id else 'Add' }} database{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">{{ 'Edit' if connection_id else 'Add' }} database connection</h1>
+<div class="card" style="max-width: 720px;">
+  <div class="card-body" id="db-form" data-connection-id="{{ connection_id or '' }}">
+    <div class="mb-3"><label class="form-label" for="f-name">Connection name</label>
+      <input class="form-control" id="f-name" placeholder="Ecommerce DB" maxlength="100"></div>
+    <div class="mb-3"><label class="form-label" for="f-type">Database type</label>
+      <select class="form-select" id="f-type">
+        <option value="mysql">MySQL / MariaDB</option>
+        <option value="postgresql">PostgreSQL</option>
+        <option value="sqlite">SQLite</option>
+        <option value="mongodb">MongoDB</option>
+      </select></div>
+    <div id="server-fields">
+      <div class="row">
+        <div class="col-md-8 mb-3"><label class="form-label" for="f-host">Host</label>
+          <input class="form-control" id="f-host" value="localhost"></div>
+        <div class="col-md-4 mb-3"><label class="form-label" for="f-port">Port</label>
+          <input class="form-control" id="f-port" type="number" min="1" max="65535" value="3306"></div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3"><label class="form-label" for="f-username">Username</label>
+          <input class="form-control" id="f-username" autocomplete="off"></div>
+        <div class="col-md-6 mb-3"><label class="form-label" for="f-password">Password</label>
+          <input class="form-control" id="f-password" type="password" autocomplete="new-password">
+          <div class="form-text d-none" id="pw-hint">Leave empty to keep the stored password.</div></div>
+      </div>
+    </div>
+    <div class="mb-3" id="auth-source-field" hidden><label class="form-label" for="f-auth">Authentication database</label>
+      <input class="form-control" id="f-auth" placeholder="admin"></div>
+    <div class="mb-3"><label class="form-label" for="f-database" id="db-label">Database</label>
+      <input class="form-control" id="f-database" placeholder="ecommerce">
+      <div class="form-text d-none" id="sqlite-hint">Full path to the SQLite file, e.g. /data/app.db or D:\data\app.db</div></div>
+    <div id="test-result" class="alert d-none"></div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-secondary" id="test-btn" type="button">Test connection</button>
+      <button class="btn btn-primary" id="save-btn" type="button">Save</button>
+      <a class="btn btn-link" href="{{ url_for('pages.databases') }}">Cancel</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/database.js') }}"></script>{% endblock %}

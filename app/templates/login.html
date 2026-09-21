@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Sign in{% endblock %}
+{% block content %}
+<div class="row justify-content-center mt-5">
+  <div class="col-md-5 col-lg-4">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h1 class="h4 text-center mb-1">🛡️ DBSafe</h1>
+        <p class="text-center text-muted small mb-4">Database backup &amp; recovery utility</p>
+        <div id="login-error" class="alert alert-danger d-none"></div>
+        <div class="mb-3">
+          <label class="form-label" for="username">Username</label>
+          <input class="form-control" id="username" autocomplete="username" autofocus>
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="password">Password</label>
+          <input class="form-control" id="password" type="password" autocomplete="current-password">
+        </div>
+        <button class="btn btn-primary w-100" id="login-btn" type="button">Sign in</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  const btn = document.getElementById('login-btn');
+  const err = document.getElementById('login-error');
+  async function submit() {
+    err.classList.add('d-none');
+    btn.disabled = true;
+    try {
+      await DBSafe.api('/api/auth/login', {method: 'POST', body: {
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value}});
+      location.href = '/';
+    } catch (e) {
+      err.textContent = e.message;
+      err.classList.remove('d-none');
+      btn.disabled = false;
+    }
+  }
+  btn.addEventListener('click', submit);
+  document.getElementById('password').addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+})();
+</script>
+{% endblock %}

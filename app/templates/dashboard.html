@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Database Backup Utility</h1>
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg"><div class="card stat"><div class="card-body"><div class="stat-label">Connected databases</div><div class="stat-value" id="s-databases">–</div></div></div></div>
+  <div class="col-6 col-lg"><div class="card stat"><div class="card-body"><div class="stat-label">Successful backups</div><div class="stat-value text-success" id="s-success">–</div></div></div></div>
+  <div class="col-6 col-lg"><div class="card stat"><div class="card-body"><div class="stat-label">Failed backups</div><div class="stat-value text-danger" id="s-failed">–</div></div></div></div>
+  <div class="col-6 col-lg"><div class="card stat"><div class="card-body"><div class="stat-label">Total backup storage</div><div class="stat-value" id="s-storage">–</div></div></div></div>
+  <div class="col-6 col-lg"><div class="card stat"><div class="card-body"><div class="stat-label">Scheduled backups</div><div class="stat-value" id="s-scheduled">–</div></div></div></div>
+</div>
+<div class="card mb-4">
+  <div class="card-header fw-semibold">Recent backups</div>
+  <div class="table-responsive">
+    <table class="table table-hover mb-0 align-middle">
+      <thead><tr><th>ID</th><th>Database</th><th>Date</th><th>Size</th><th>Status</th></tr></thead>
+      <tbody id="recent"><tr><td colspan="5" class="text-muted">Loading…</td></tr></tbody>
+    </table>
+  </div>
+</div>
+<div class="d-flex flex-wrap gap-2">
+  <a class="btn btn-primary" href="{{ url_for('pages.backups') }}">Create Backup</a>
+  <a class="btn btn-outline-primary" href="{{ url_for('pages.restore') }}">Restore</a>
+  <a class="btn btn-outline-primary" href="{{ url_for('pages.schedules') }}">Schedule Backup</a>
+  <a class="btn btn-outline-primary" href="{{ url_for('pages.databases') }}">Database Connections</a>
+  <a class="btn btn-outline-primary" href="{{ url_for('pages.backups') }}">Backup History</a>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>{% endblock %}

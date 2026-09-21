@@ -1,0 +1,2 @@
+.tables-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: .25rem .75rem;
+  max-height: 220px; overflow: auto; padding: .5rem; border: 1px solid #dee2e6; border-radius: .375rem; background: #fff; }

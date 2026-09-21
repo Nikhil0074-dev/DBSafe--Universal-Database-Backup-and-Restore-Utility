@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Databases{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h3 mb-0">Database connections</h1>
+  {% if user.role == 'admin' %}<a class="btn btn-primary" href="{{ url_for('pages.add_database') }}">+ Add database</a>{% endif %}
+</div>
+<div class="card">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0 align-middle">
+      <thead><tr><th>Name</th><th>Type</th><th>Host</th><th>Database</th><th>Status</th><th class="text-end">Actions</th></tr></thead>
+      <tbody id="db-list"><tr><td colspan="6" class="text-muted">Loading…</td></tr></tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/database.js') }}"></script>{% endblock %}

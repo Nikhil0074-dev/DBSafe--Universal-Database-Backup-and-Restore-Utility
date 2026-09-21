@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Schedules{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Scheduled backups</h1>
+{% if user.role == 'admin' %}
+<div class="card mb-4">
+  <div class="card-header fw-semibold">New schedule</div>
+  <div class="card-body">
+    <div class="row g-3">
+      <div class="col-md-4"><label class="form-label" for="s-connection">Database</label><select class="form-select" id="s-connection"></select></div>
+      <div class="col-md-3"><label class="form-label" for="s-frequency">Frequency</label>
+        <select class="form-select" id="s-frequency">
+          <option value="hourly">Hourly</option><option value="every_6_hours">Every 6 hours</option>
+          <option value="daily" selected>Daily</option><option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option><option value="custom">Custom (cron)</option></select></div>
+      <div class="col-md-2"><label class="form-label" for="s-time">Time</label><input class="form-control" id="s-time" type="time" value="02:00"></div>
+      <div class="col-md-3 d-none" id="s-dow-box"><label class="form-label" for="s-dow">Day of week</label>
+        <select class="form-select" id="s-dow"><option value="0">Monday</option><option value="1">Tuesday</option><option value="2">Wednesday</option><option value="3">Thursday</option><option value="4">Friday</option><option value="5">Saturday</option><option value="6">Sunday</option></select></div>
+      <div class="col-md-3 d-none" id="s-dom-box"><label class="form-label" for="s-dom">Day of month (1-28)</label><input class="form-control" id="s-dom" type="number" min="1" max="28" value="1"></div>
+      <div class="col-md-4 d-none" id="s-cron-box"><label class="form-label" for="s-cron">Cron expression</label><input class="form-control" id="s-cron" placeholder="0 */4 * * *"></div>
+      <div class="col-md-2"><label class="form-label" for="s-compression">Compression</label>
+        <select class="form-select" id="s-compression"><option value="gzip">GZIP</option><option value="zip">ZIP</option><option value="none">None</option></select></div>
+      <div class="col-md-2"><label class="form-label" for="s-retention">Keep (days)</label><input class="form-control" id="s-retention" type="number" min="0" value="30"></div>
+      <div class="col-md-2"><label class="form-label" for="s-daily">Daily keep</label><input class="form-control" id="s-daily" type="number" min="0" value="0"></div>
+      <div class="col-md-2"><label class="form-label" for="s-weekly">Weekly keep</label><input class="form-control" id="s-weekly" type="number" min="0" value="0"></div>
+      <div class="col-md-2"><label class="form-label" for="s-monthly">Monthly keep</label><input class="form-control" id="s-monthly" type="number" min="0" value="0"></div>
+      <div class="col-md-4 d-flex align-items-end gap-4 pb-2">
+        <div class="form-check"><input class="form-check-input" type="checkbox" id="s-encrypt"><label class="form-check-label" for="s-encrypt">Encrypt</label></div>
+        <div class="form-check"><input class="form-check-input" type="checkbox" id="s-verify" checked><label class="form-check-label" for="s-verify">Verify</label></div>
+      </div>
+    </div>
+    <div class="form-text mt-2">Retention: days keeps every backup newer than N days. Daily/weekly/monthly keep the newest backup of that many days/weeks/months. Rules combine; 0 disables a rule. Only scheduled backups are removed.</div>
+    <button class="btn btn-primary mt-3" id="s-create" type="button">Create schedule</button>
+  </div>
+</div>
+{% endif %}
+<div class="card">
+  <div class="table-responsive"><table class="table table-hover mb-0 align-middle">
+    <thead><tr><th>Database</th><th>Frequency</th><th>Options</th><th>Retention</th><th>Next run</th><th>Last run</th><th>Enabled</th><th class="text-end">Actions</th></tr></thead>
+    <tbody id="s-list"><tr><td colspan="8" class="text-muted">Loading…</td></tr></tbody></table></div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/schedule.js') }}"></script>{% endblock %}

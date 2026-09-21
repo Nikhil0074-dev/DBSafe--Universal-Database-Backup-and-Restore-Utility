@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Logs{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">Operation logs</h1>
+<div class="card">
+  <div class="card-header d-flex flex-wrap gap-2">
+    <input class="form-control form-control-sm" style="width:220px" id="l-search" placeholder="Search…">
+    <select class="form-select form-select-sm" style="width:140px" id="l-status"><option value="">All statuses</option><option value="success">Success</option><option value="failed">Failed</option></select>
+  </div>
+  <div class="table-responsive"><table class="table table-sm table-hover mb-0 align-middle">
+    <thead><tr><th>Time</th><th>User</th><th>Operation</th><th>Database</th><th>Status</th><th>Message</th></tr></thead>
+    <tbody id="l-list"><tr><td colspan="6" class="text-muted">Loading…</td></tr></tbody></table></div>
+  <div class="card-footer d-flex justify-content-between align-items-center"><span class="small text-muted" id="l-count"></span>
+    <div class="btn-group btn-group-sm"><button class="btn btn-outline-secondary" id="l-prev" type="button">Previous</button><button class="btn btn-outline-secondary" id="l-next" type="button">Next</button></div></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const $ = id => document.getElementById(id);
+  let page = 1, total = 0; const per = 50;
+  async function load() {
+    try {
+      const q = new URLSearchParams({page, per_page: per, q: $('l-search').value, status: $('l-status').value});
+      const d = await DBSafe.api('/api/logs?' + q);
+      total = d.total;
+      $('l-list').innerHTML = d.items.length ? d.items.map(r => `<tr><td class="text-nowrap">${DBSafe.esc(r.timestamp)}</td>
+        <td>${DBSafe.esc(r.username)}</td><td>${DBSafe.esc(r.operation)}</td><td>${DBSafe.esc(r.database_name || '')}</td>
+        <td>${DBSafe.badge(r.status)}</td><td>${DBSafe.esc(r.message || '')}</td></tr>`).join('')
+        : '<tr><td colspan="6" class="text-muted">No entries.</td></tr>';
+      $('l-count').textContent = `${total} entries · page ${page}`;
+      $('l-prev').disabled = page <= 1; $('l-next').disabled = page * per >= total;
+    } catch (e) { DBSafe.toast(e.message, 'danger'); }
+  }
+  let timer; $('l-search').addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(() => { page = 1; load(); }, 300); });
+  $('l-status').addEventListener('change', () => { page = 1; load(); });
+  $('l-prev').addEventListener('click', () => { page--; load(); });
+  $('l-next').addEventListener('click', () => { page++; load(); });
+  load();
+});
+</script>
+{% endblock %}
