@@ -1,4 +1,4 @@
-# DBSafe- Universal Database Backup and Restore Utility
+# DBSafe - Universal Database Backup and Restore Utility
 
 A modular web application (Flask + SQLite metadata store) that backs up, verifies, schedules and
 restores **MySQL/MariaDB, PostgreSQL, SQLite and MongoDB** databases from one interface.
